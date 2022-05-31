@@ -1,0 +1,6 @@
+spring:
+    jackson:
+        property-naming-strategy: SNAKE_CASE
+
+redis:
+    prefix-key: mendel-tx_
