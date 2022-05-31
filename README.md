@@ -1,2 +1,1 @@
 # transaction-api
-Challenge Mendel
