@@ -1,36 +1,39 @@
 package com.mendel.mpayments.services
 
 import com.mendel.mpayments.model.Transaction
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import com.mendel.mpayments.utils.Utils
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Repository
 
 @Repository
 class TransactionRepository {
-    private val logger: Logger = LoggerFactory.getLogger(TransactionRepository::class.java)
 
-    @Value("\${redis.prefix-key}")
-    private lateinit var prefixRedisKey: String
+    @Autowired
+    private lateinit var utils: Utils
     @Autowired
     private lateinit var redisTemplate: RedisTemplate<String, Transaction>
 
     fun saveTransaction(transaction: Transaction) {
-        redisTemplate.opsForValue().set(prefixRedisKey+transaction.transactionId, transaction)
-        redisTemplate.boundListOps(prefixRedisKey+transaction.type).leftPush(transaction)
+        redisTemplate.opsForValue().set(utils.getRedisTransactionIdKey(transaction.transactionId), transaction)
+        redisTemplate.boundListOps(utils.getRedisTypeKey(transaction.type)).leftPush(transaction)
+        redisTemplate.boundListOps(utils.getRedisPidKey(transaction.parentId)).leftPush(transaction)
     }
 
     fun getTransactionWithType(type: String): Collection<Long> {
-        val sizeList = redisTemplate.boundListOps(prefixRedisKey+type).size() ?: 1
-        val txs = redisTemplate.boundListOps(prefixRedisKey+type).range(0, sizeList)
+        val sizeList = redisTemplate.boundListOps(utils.getRedisTypeKey(type)).size() ?: 1
+        val txs = redisTemplate.boundListOps(type).range(0, sizeList)
 
-        return (txs?.map { tx -> tx.transactionId } ?: emptyList())  as Collection<Long>
+        return (txs?.map { tx -> tx.transactionId } ?: emptyList())
     }
 
-    fun getTransactionWithId(transactionId: String): Transaction {
-        val tx = redisTemplate.opsForValue().get(prefixRedisKey+transactionId)
+    fun getTransactionsWithParentId(parentId: Long): Collection<Transaction> {
+        val sizeList = redisTemplate.boundListOps(utils.getRedisPidKey(parentId)).size() ?: 1
+        return redisTemplate.boundListOps(utils.getRedisPidKey(parentId)).range(0, sizeList) ?: emptyList()
+    }
+
+    fun getTransactionWithId(pidTransactionId: Long): Transaction {
+        val tx = redisTemplate.opsForValue().get(utils.getRedisPidKey(pidTransactionId))
         tx?.let { return tx }
         throw Exception()
     }

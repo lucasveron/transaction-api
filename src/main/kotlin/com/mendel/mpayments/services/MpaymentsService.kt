@@ -24,4 +24,10 @@ class MpaymentsService {
     fun getTransactionWithType(type: String): Collection<Long> {
         return transactionRepository.getTransactionWithType(type)
     }
+
+    fun getSumAmountForParentId(parentId:Long): Double {
+        val txs = transactionRepository.getTransactionsWithParentId(parentId)
+
+        return txs.sumOf { tx -> tx.amount }
+    }
 }

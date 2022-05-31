@@ -1,3 +1,3 @@
 package com.mendel.mpayments.model.vo
 
-class TransactionResponse(){}
+data class TransactionResponse(val status: String){}

@@ -3,4 +3,5 @@ spring:
         property-naming-strategy: SNAKE_CASE
 
 redis:
-    prefix-key: mendel-tx_
+    prefix-key-basic: mendel-tx_
+    prefix-key-pid: pid_
