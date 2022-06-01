@@ -8,8 +8,8 @@ For running project alone(need a up Redis):
 $ gradlew bootRun
 ```
 
-La aplicación corre sobre <http://localhost:8080><br>
-Redis lo hace sobre localhost:6379
+The app runs over http://localhost:8080<br>
+Redis does it over localhost:6379
 ### Docker build image 🔨
 ```bash
 $ docker build -t mpayments:0.0.1 .
