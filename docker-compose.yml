@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  mpayments:
+    image: mpayments:0.0.1
+    ports:
+      - 8080:8080
+    volumes:
+      - ~/docker/redis:/urlshortner/logs
+    network_mode: host
+  redis:
+    image: redis:latest
+    hostname: localhost
+    ports:
+      - 6379:6379
+    network_mode: host
