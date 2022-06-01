@@ -41,20 +41,20 @@ curl --location --request PUT 'http://localhost:8080/transactions/3' \
 }'
 ```
 ### Request Reference
-amount: total amount for transaction
-type: type of transaction. Must be not blank
-parent_id: identification of dependency for other transaction
+<b>amount:</b> total amount for transaction<br>
+<b>type:</b> type of transaction. Must be not blank<br>
+<b>parent_id:</b> identification of dependency for other transaction<br>
 
 ## Retrieve al ids for transaction type {type}
 ```
 curl --location --request GET 'http://localhost:8080/transactions/types/{type}'
 ```
 ### Request Reference
-{type}: type of transaction
+<b>{type}:</b> type of transaction<br>
 
 ## Retrieve sum of amount transactions with same parent_id
 ```
 curl --location --request GET 'http://localhost:8080/transactions/sum/{parent_id}'
 ```
 ### Request Reference
-{parent_id}: identification of parent_id
+<b>{parent_id}:</b> identification of parent_id
